@@ -1,4 +1,4 @@
-package com.lxing.common.msg;
+package com.lxing.common.response;
 
 /***
  * Created on 2017/11/1 <br>

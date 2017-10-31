@@ -1,4 +1,4 @@
-package com.lxing.common.msg;
+package com.lxing.common.response;
 
 import java.util.List;
 

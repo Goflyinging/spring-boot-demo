@@ -4,8 +4,8 @@ import com.lxing.common.constant.StatusConstants;
 import com.lxing.common.domain.ArgumentInvalidResult;
 import com.lxing.common.exception.BaseException;
 import com.lxing.common.exception.ValidateException;
-import com.lxing.common.msg.BaseResponse;
-import com.lxing.common.msg.ListResultResponse;
+import com.lxing.common.response.BaseResponse;
+import com.lxing.common.response.ListResultResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
