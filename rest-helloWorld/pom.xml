@@ -11,8 +11,14 @@
 
   <groupId>com.lxing</groupId>
   <artifactId>rest-helloWorld</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>rest-demo</module>
+        <module>rest-valid</module>
+        <module>rest-swagger</module>
+    </modules>
 
-  <dependencies>
+    <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

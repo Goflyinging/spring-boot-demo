@@ -17,6 +17,7 @@
     <module>rest-common</module>
     <module>rest-helloWorld</module>
     <module>rest-web</module>
+      <module>rest-client</module>
   </modules>
 
   <properties>

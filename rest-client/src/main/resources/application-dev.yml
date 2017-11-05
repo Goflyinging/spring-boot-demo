@@ -1,0 +1,13 @@
+server:
+    port: 8061 #启动端口
+# SPRING PROFILES
+spring:
+    # DATASOURCE
+    datasource:
+        driverClass: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1/demo?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+        username: root
+        password: 1234ROOT.mysql
+mybatis:
+  type-aliases-package: com.lxing.demo.domain
+
