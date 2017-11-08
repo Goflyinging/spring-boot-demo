@@ -5,6 +5,8 @@ import com.lxing.swagger.domain.Book;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +15,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -32,37 +38,57 @@ import io.swagger.annotations.ApiResponses;
 @Api(value = "/books", description = "书籍API")
 public class BookController {
 
-    private static final Logger logger = LoggerFactory.getLogger(BookController.class);
+    Map<String, Book> bookRepository = new ConcurrentHashMap<>();
+    public static AtomicInteger atomicInteger = new AtomicInteger(0);
 
 
     @PostMapping
     @ApiOperation(value = "新增书籍")
     @ApiImplicitParam(dataType = "Book", name = "book", value = "书籍信息", required = true)
     @ApiResponses({
+            @ApiResponse(code = 201, message = "新增成功"),
             @ApiResponse(code = 500, message = "接口异常"),
     })
-    public Book create(@RequestBody Book book) {
-        book.setId("1");
-        return book;
+    public ResponseEntity<Book> create(@RequestBody Book book) {
+        //生成id
+        String id = String.valueOf(atomicInteger.incrementAndGet());
+        book.setId(id);
+        bookRepository.put(id, book);
+        //返回处理结果
+        return new ResponseEntity<>(book, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id:\\d+}")
-    public void delete(@PathVariable("id") String id) {
-        logger.info("删除用户：id{}", id);
+    public ResponseEntity<Book> delete(@PathVariable("id") String id) {
+        Book book = bookRepository.remove(id);
+        if (book == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        //请求收到但返回结果为空
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
     @PutMapping("/{id:\\d+}")
-    public Book update(@RequestBody Book book) {
-        book.setId("1");
-        return book;
+    public ResponseEntity<Book> update(@RequestBody Book book) {
+        Book originalBook = bookRepository.get(book.getId());
+        if (originalBook == null) {
+            return new ResponseEntity<>(book, HttpStatus.NOT_FOUND);
+        }
+        originalBook.setAuthor(book.getAuthor());
+        originalBook.setBookName(book.getBookName());
+        originalBook.setPrice(book.getPrice());
+        bookRepository.put(originalBook.getId(), originalBook);
+        return new ResponseEntity<>(originalBook, HttpStatus.OK);
     }
 
     @GetMapping("/{id:\\d+}")
-    public Book getInfo(@PathVariable("id") String id) {
-        Book book = new Book();
-        book.setId(id);
-        return book;
+    public ResponseEntity<Book> getInfo(@PathVariable("id") String id) {
+        Book book = bookRepository.get(id);
+        if (book == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(book, HttpStatus.OK);
     }
 
 }

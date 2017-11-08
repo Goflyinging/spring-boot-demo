@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /***
  * Created on 2017/11/1 <br>
- * Description: [SwaggerUI配置 ]<br>
+ * Description: [SwaggerUI配置  http://localhost:8060/swagger-ui.html]<br>
  * @author lxing
  * @version 1.0
  */
@@ -33,7 +33,10 @@ public class Swagger2Config {
                 .build();
     }
 
-    //构建 api文档的详细信息函数
+    /***
+     * 构建 api文档的详细信息函数
+     * @return
+     */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 //页面标题

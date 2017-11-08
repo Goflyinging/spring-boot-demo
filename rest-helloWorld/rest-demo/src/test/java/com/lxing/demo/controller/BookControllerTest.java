@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -40,19 +41,22 @@ public class BookControllerTest {
 
     @Test
     public void whenCreateUserSuccess() throws Exception {
-        String content = "{\"id\": \"1\",\"bookName\":\"spring\",\"author\":\"spring\",\"price\": 50}";
+        String content = "{\"bookName\":\"spring\",\"author\":\"spring\",\"price\": 50}";
         mockMvc.perform(MockMvcRequestBuilders.post("/books")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)//请求头
                 .content(content))//请求体
-                .andExpect(MockMvcResultMatchers.status().isOk())//200
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value("1"));//返回json串
+                .andExpect(MockMvcResultMatchers.status().isCreated())//201
+                .andExpect(MockMvcResultMatchers.jsonPath("$.bookName").value("spring"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.author").value("spring"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.price").value("50"));//返回json串
+
     }
 
     @Test
     public void whenDeleteSuccess() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/books/1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test

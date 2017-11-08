@@ -3,5 +3,9 @@ spring:
     active: dev   #默认环境   java -jar xxx.jar --spring.profiles.active=test指定环境
   application:
         name: rest-demo
+mybatis:
+  type-aliases-package: com.lxing.demo.domain
+  config-locations: classpath*:mybatis/mybatis-config.xml
+  mapper-locations: classpath*:mybatis/mapper/*.xml
 
 

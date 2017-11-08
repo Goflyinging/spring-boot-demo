@@ -23,7 +23,15 @@ public class Book {
     /**
      * 价格
      **/
-    private int price;
+    private double price;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     public String getId() {
         return id;
@@ -49,11 +57,5 @@ public class Book {
         this.author = author;
     }
 
-    public int getPrice() {
-        return price;
-    }
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
 }
