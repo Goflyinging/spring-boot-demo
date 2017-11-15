@@ -3,6 +3,8 @@ package com.lxing.valid.domain;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
+
 /***
  * Created on 2017/11/3 <br>
  * Description: [Book bean]<br>
@@ -14,7 +16,7 @@ public class Book {
     /**
      * 编号
      **/
-    @NotEmpty(message = "id不能为空", groups = BookValidGroupB.class)
+    @NotNull(message = "id不能为空", groups = BookValidGroupB.class)
     private String id;
     /**
      * 书名

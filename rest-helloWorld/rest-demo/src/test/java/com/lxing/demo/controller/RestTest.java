@@ -4,7 +4,12 @@ import com.lxing.demo.domain.Book;
 
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import java.lang.annotation.Annotation;
 
 /***
  * Created on 2017/11/3 <br>
@@ -24,13 +29,60 @@ public class RestTest {
     public void whenPostBookSuccess() {
         RestTemplate restTemplate = new RestTemplate();
         Book book = new Book();
-        book.setId("22");
-
+        book.setId(22);
         ResponseEntity<String> entity = restTemplate.postForEntity("http://127.0.0.1:8060/books", book, String.class);
         System.out.println(entity.getStatusCode());
         System.out.println(entity.hasBody());
         System.out.println(entity.getBody());
         System.out.println(entity.toString());
+
+    }
+
+    @Test
+    public void annotationTest() {
+//        @Documented –注解是否将包含在JavaDoc中
+//        @Retention –什么时候使用该注解
+//        @Target? –注解用于什么地方
+//        @Inherited – 是否允许被该注解注解的父类的子类继承该注解
+        Class bookControllerClass = BookController.class;
+        System.out.println("-------->1"+bookControllerClass.getAnnotation(ResponseBody.class));
+        System.out.println("-------->2"+bookControllerClass.getAnnotationsByType(ResponseBody.class));
+        Annotation[] annotations = bookControllerClass.getDeclaredAnnotations();
+        for (Annotation annotation : annotations) {
+            System.out.println("-------->3"+annotation);
+            if (annotation instanceof RestController) {
+                RestController restController = (RestController) annotation;
+                System.out.println(restController.value());
+
+            }
+            if (annotation instanceof RequestMapping) {
+                RequestMapping requestMapping = (RequestMapping) annotation;
+
+                String[] value = requestMapping.value();
+                for (String string : value) {
+                    System.out.println(string);
+                }
+            }
+        }
+//        Method[] methods = bookControllerClass.getMethods();
+//        for (Method method : methods) {
+//            if (method.isAnnotationPresent(GetMapping.class)) {
+//                GetMapping getMapping = method.getAnnotation(GetMapping.class);
+//                String[] value = getMapping.value();
+//                for (String string : value) {
+//                    System.out.println(string);
+//                }
+//                if (GetMapping.class.isAnnotationPresent(RequestMapping.class)) {
+//                    RequestMapping requestMapping = GetMapping.class.getAnnotation(RequestMapping.class);
+//                    RequestMethod[] requestMethods = requestMapping.method();
+//                    for (RequestMethod requestMethod : requestMethods) {
+//                        System.out.println(requestMethod.name());
+//                    }
+//                }
+//
+//            }
+//        }
+
 
     }
 }

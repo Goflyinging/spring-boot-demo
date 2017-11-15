@@ -3,11 +3,11 @@ package com.lxing.client.config;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.http.Header;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeader;
@@ -18,88 +18,109 @@ import org.springframework.web.client.RestTemplate;
 
 /***
  * Created on 2017/11/3 <br>
- * Description: <br>
- * @author 01369533
+ * Description:restTemplate配置 <br>
+ * @author lxing
  */
 @Configuration
 public class HttpClientRestConfig {
-//    @Bean
-//    public ClientHttpRequestFactory clientHttpRequestFactory() {
-//        HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-//        //clientHttpRequestFactory.setHttpClient();
-//        //这里是使用了自定义的一个HttpsClientPoolThread线程池单例 以后有机会会单独写文章展示其配置内容, 大家可以先使用默认的HttpClients.createDefault()进行配置,或自定义线程池;
-//        clientHttpRequestFactory.setConnectTimeout(10000);
-//        clientHttpRequestFactory.setReadTimeout(10000);
-//        clientHttpRequestFactory.setConnectionRequestTimeout(200);
-//        return clientHttpRequestFactory;
-//    }
+    /***
+     * 回收空闲连接定期时间
+     */
+    private long maxIdleTime = 60L;
 
-//  @Bean
-//  public RestTemplate restTemplate() {
-//    SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-//    requestFactory.setConnectTimeout(1000);// 设置超时
-//    requestFactory.setReadTimeout(1000);
-//    RestTemplate restTemplate = new RestTemplate(requestFactory);
-//    return  restTemplate;
-//  }
-  @Bean
-  public RestTemplate restTemplate() {
-    // 长连接保持30秒
-    PoolingHttpClientConnectionManager pollingConnectionManager = new PoolingHttpClientConnectionManager(
-        30, TimeUnit.SECONDS);
-    // 总连接数
-    pollingConnectionManager.setMaxTotal(40);
-    // 同路由的并发数
-    pollingConnectionManager.setDefaultMaxPerRoute(30);
+    /***
+     * 链接存活时间
+     */
+    private long timeToLive = 60L;
+    /***
+     * 连接池最大连接总数
+     */
+    private int poolMaxTotal = 40;
+    /***
+     * 每个路由最大的连接数
+     */
+    private int poolMaxPerRounte = 30;
+    /***
+     *  缓冲请求数据，默认值是true。
+     *  通过POST或者PUT大量发送数据时，建议将此属性更改为false，以免耗尽内存。
+     */
+    private boolean bufferRequestBody = false;
 
-    HttpClientBuilder httpClientBuilder = HttpClients.custom();
-    httpClientBuilder.setConnectionManager(pollingConnectionManager);
-    // 重试次数，默认是3次，没有开启
-    httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(1, true));
-    // 保持长连接配置，需要在头添加Keep-Alive
-    httpClientBuilder.setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy());
+    /***
+     * 连接超时时间
+     */
+    private int connectTimeout = 3 * 1000;
 
-//        RequestConfig.Builder builder = RequestConfig.custom();
-//        builder.setConnectionRequestTimeout(200);
-//        builder.setConnectTimeout(5000);
-//        builder.setSocketTimeout(5000);
-//
-//        RequestConfig requestConfig = builder.build();
-//        httpClientBuilder.setDefaultRequestConfig(requestConfig);
+    /***
+     *等待数据超时时间
+     */
+    private int readTimeout = 3 * 1000;
 
-    List<Header> headers = new ArrayList<>();
-    headers.add(new BasicHeader("User-Agent",
-        "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.16 Safari/537.36"));
-    headers.add(new BasicHeader("Accept-Encoding", "gzip,deflate"));
-    headers.add(new BasicHeader("Accept-Language", "zh-CN"));
-    headers.add(new BasicHeader("Connection", "Keep-Alive"));
+    /***
+     * 从连接池获取连接的超时时间
+     */
+    private int connectionRequestTimeout = 200;
 
-    httpClientBuilder.setDefaultHeaders(headers);
+    /***
+     * StringHttpMessageConverter 编码
+     */
+    private String charsetName = "utf-8";
 
-    CloseableHttpClient httpClient = httpClientBuilder.build();
 
-    // httpClient连接配置，底层是配置RequestConfig
-    HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(
-        httpClient);
-    // 连接超时
-    clientHttpRequestFactory.setConnectTimeout(5000);
-    // 数据读取超时时间，即SocketTimeout
-    clientHttpRequestFactory.setReadTimeout(5000);
-    // 连接不够用的等待时间，不宜过长，必须设置，比如连接不够用时，时间过长将是灾难性的
-    clientHttpRequestFactory.setConnectionRequestTimeout(200);
-    // 缓冲请求数据，默认值是true。通过POST或者PUT大量发送数据时，建议将此属性更改为false，以免耗尽内存。
-    // clientHttpRequestFactory.setBufferRequestBody(false);
+    @Bean
+    public RestTemplate restTemplate() {
 
-    // 添加内容转换器
-//    List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-//    messageConverters.add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
-//    messageConverters.add(new FormHttpMessageConverter());
-//    messageConverters.add(new MappingJackson2XmlHttpMessageConverter());
-//    messageConverters.add(new MappingJackson2HttpMessageConverter());
+        // 添加内容转换器
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setRequestFactory(clientHttpRequestFactory());
+        restTemplate.setErrorHandler(new GlobalResponseErrorHandler());
+        return restTemplate;
+    }
 
-    RestTemplate restTemplate = new RestTemplate();
-    restTemplate.setRequestFactory(clientHttpRequestFactory);
-    // restTemplate.setErrorHandler(new DefaultResponseErrorHandler());
-    return restTemplate;
-  }
+    @Bean
+    public HttpComponentsClientHttpRequestFactory clientHttpRequestFactory() {
+
+        // 长连接保持30秒
+        PoolingHttpClientConnectionManager pollingConnectionManager = new PoolingHttpClientConnectionManager(
+                timeToLive, TimeUnit.SECONDS);
+        // 总连接数
+        pollingConnectionManager.setMaxTotal(poolMaxTotal);
+        // 同路由的并发数
+        pollingConnectionManager.setDefaultMaxPerRoute(poolMaxPerRounte);
+
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader("User-Agent",
+                "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.16 Safari/537.36"));
+        headers.add(new BasicHeader("Accept-Encoding", "gzip,deflate"));
+        headers.add(new BasicHeader("Accept-Language", "zh-CN"));
+        headers.add(new BasicHeader("Connection", "Keep-Alive"));
+
+        CloseableHttpClient httpClient = HttpClients.custom()
+                //请求头
+                .setDefaultHeaders(headers)
+                //连接池
+                .setConnectionManager(pollingConnectionManager)
+                //保持长链接配置
+                .setKeepAliveStrategy(DefaultConnectionKeepAliveStrategy.INSTANCE)
+                //重试次数
+                .setRetryHandler(new DefaultHttpRequestRetryHandler(1, false))
+                //定期回收过期连接
+                .evictExpiredConnections()
+                //定期回收空闲连接
+                .evictIdleConnections(maxIdleTime, TimeUnit.SECONDS)
+                .build();
+        // httpClient连接配置，底层是配置RequestConfig
+        HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(
+                httpClient);
+        // 连接超时
+        clientHttpRequestFactory.setConnectTimeout(connectTimeout);
+        // 数据读取超时时间，即SocketTimeout
+        clientHttpRequestFactory.setReadTimeout(readTimeout);
+        // 连接不够用的等待时间，不宜过长，必须设置，比如连接不够用时，时间过长将是灾难性的
+        clientHttpRequestFactory.setConnectionRequestTimeout(connectionRequestTimeout);
+        // 缓冲请求数据，默认值是true。通过POST或者PUT大量发送数据时，建议将此属性更改为false，以免耗尽内存。
+        clientHttpRequestFactory.setBufferRequestBody(bufferRequestBody);
+
+        return clientHttpRequestFactory;
+    }
 }

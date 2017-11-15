@@ -1,5 +1,5 @@
 server:
-    port: 8061 #启动端口
+    port: 8060 #启动端口
 # SPRING PROFILES
 spring:
     # DATASOURCE
@@ -10,8 +10,4 @@ spring:
         password: 1234ROOT.mysql
 mybatis:
   type-aliases-package: com.lxing.demo.domain
-
-Http:
-  httpClient:
-
 

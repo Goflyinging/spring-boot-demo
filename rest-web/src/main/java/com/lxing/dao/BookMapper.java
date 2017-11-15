@@ -1,6 +1,7 @@
-package com.lxing.demo.dao;
+package com.lxing.dao;
 
-import com.lxing.demo.domain.Book;
+
+import com.lxing.domain.Book;
 
 import org.apache.ibatis.annotations.Mapper;
 

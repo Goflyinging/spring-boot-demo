@@ -11,5 +11,28 @@
 
     <artifactId>rest-demo</artifactId>
 
+    <properties>
+        <httpclinet.version>4.5.1</httpclinet.version>
+    </properties>
+    <dependencies>
+        <!--httpclient-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclinet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient-cache</artifactId>
+            <version>${httpclinet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>${httpclinet.version}</version>
+        </dependency>
+        <!--httpclient end-->
+    </dependencies>
+
 
 </project>

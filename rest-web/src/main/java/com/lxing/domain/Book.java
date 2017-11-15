@@ -1,4 +1,4 @@
-package com.lxing.demo.domain;
+package com.lxing.domain;
 
 
 /***
