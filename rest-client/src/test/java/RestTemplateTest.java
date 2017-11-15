@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 /***
  * Created on 2017/11/13 <br>
  * Description: <br>
- * @author 01369533
+ * @author lxing
  */
 public class RestTemplateTest {
 

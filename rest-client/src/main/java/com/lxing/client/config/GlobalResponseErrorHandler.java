@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
 /***
  * Created on 2017/11/13 <br>
  * Description: <br>
- * @author 01369533
+ * @author lxing
  */
 public class GlobalResponseErrorHandler implements ResponseErrorHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalResponseErrorHandler.class);

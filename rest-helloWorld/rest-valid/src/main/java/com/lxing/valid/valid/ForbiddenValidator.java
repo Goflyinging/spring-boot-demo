@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidatorContext;
 /***
  * Created on 2017/11/3 <br>
  * Description: <br>
- * @author 01369533
+ * @author lxing
  */
 public class ForbiddenValidator implements ConstraintValidator<Forbidden, String> {
 

@@ -6,7 +6,7 @@ import com.lxing.demo.domain.Book;
 /***
  * Created on 2017/11/8 <br>
  * Description: <br>
- * @author 01369533
+ * @author lxing
  */
 public interface BookService {
     int insert(Book book);

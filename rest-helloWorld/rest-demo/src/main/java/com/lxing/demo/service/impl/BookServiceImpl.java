@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 /***
  * Created on 2017/11/8 <br>
  * Description: <br>
- * @author 01369533
+ * @author lxing
  */
 @Service
 public class BookServiceImpl implements BookService {

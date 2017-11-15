@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /***
  * Created on 2017/11/3 <br>
  * Description: <br>
- * @author 01369533
+ * @author lxing
  */
 @Target({FIELD, METHOD, PARAMETER, ANNOTATION_TYPE}) //指明该类型的注解可以注解的程序元素的范围
 @Retention(RUNTIME)//指明了该Annotation被保留的时间长短
