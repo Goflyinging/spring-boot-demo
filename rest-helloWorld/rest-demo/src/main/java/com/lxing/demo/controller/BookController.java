@@ -4,14 +4,9 @@ package com.lxing.demo.controller;
 import com.lxing.demo.domain.Book;
 import com.lxing.demo.service.BookService;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +29,8 @@ public class BookController {
     @Autowired
     BookService bookService;
 
-    @PostMapping
+    @PostMapping //
+    //@RequestMapping(method =RequestMethod.POST)
     public ResponseEntity<Book> create(@RequestBody Book book) {
         int isSuccess = bookService.insert(book);
         if (isSuccess == 0) {

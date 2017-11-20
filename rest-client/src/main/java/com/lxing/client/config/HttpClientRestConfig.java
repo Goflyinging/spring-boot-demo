@@ -1,9 +1,5 @@
 package com.lxing.client.config;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.http.Header;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
@@ -15,6 +11,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /***
  * Created on 2017/11/3 <br>
@@ -67,16 +67,22 @@ public class HttpClientRestConfig {
     private String charsetName = "utf-8";
 
 
+    /***
+     * spring客户端访问restful服务类  支持http方法  json等数据转换（jackson fastjson） 错误处理
+     * @return
+     */
     @Bean
     public RestTemplate restTemplate() {
-
-        // 添加内容转换器
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(clientHttpRequestFactory());
         restTemplate.setErrorHandler(new GlobalResponseErrorHandler());
         return restTemplate;
     }
 
+    /***
+     * 使用HttpClient 帮助类
+     * @return
+     */
     @Bean
     public HttpComponentsClientHttpRequestFactory clientHttpRequestFactory() {
 
